@@ -5,11 +5,15 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
 
-/** Initiate process */
-$directory = __DIR__.'/../dir';
-$fileName = 'readme.txt';
+/** Initiate process when user submits form */
+if ($_SERVER["REQUEST_METHOD"] == "POST" && $_POST['username']) {
+	$folderName = $_POST['username'];
+	$fileName = 'readme.txt';
+	// die($folderName);
 
-var_dump(scanUserFile($fileName, $directory));
+	var_dump(scanUserFile($fileName, $folderName));
+}
+
 
 
 /**
@@ -38,6 +42,7 @@ function scanUserFile($fileName, $folderName) {
 		return true;
 
 	} else {
+		die('Failed here');
 		return false;
 	}
 }
@@ -51,8 +56,11 @@ function scanUserFile($fileName, $folderName) {
  */
 function isFileInDirectory($fileName, $folderName)
 {
-	if (is_dir($folderName)) {
-		$contents = scandir($folderName);
+	$directory = __DIR__.'/../dir';
+	$path = $directory . '/' . $folderName;
+
+	if (is_dir($path)) {
+		$contents = scandir($path);
 
 		return in_array($fileName, $contents) ? true : false;
 	}
@@ -69,7 +77,8 @@ function isFileInDirectory($fileName, $folderName)
  */
 function getFileContent($fileName, $folderName)
 {
-	$path = $folderName . '/' . $fileName;
+	$directory = __DIR__.'/../dir';
+	$path = $directory . '/' . $folderName . '/' . $fileName;
 
 	if (file_exists($path) && is_readable($path)) {
 		return file_get_contents($path);
