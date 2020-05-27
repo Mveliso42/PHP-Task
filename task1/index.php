@@ -7,21 +7,22 @@ error_reporting(E_ALL);
 
 /** Initiate process */
 $directory = __DIR__.'/../dir';
-$filename = 'readme.txt';
+$fileName = 'readme.txt';
 
-var_dump(scanUserFile($filename, $directory));
+var_dump(scanUserFile($fileName, $directory));
 
 
 /**
- * Scan through the user's file to ensure all requirements were met
+ * Get the folder name provided by the user to get their 'readme' file and then
+ * scan through the file to ensure all requirements were met
  *
- * @param  string  $filename
- * @param  string  $directory
+ * @param  string  $fileName
+ * @param  string  $folderName
  * @return bool
  */
-function scanUserFile($filename, $directory) {
-	if (isFileInDirectory($filename, $directory)) {
-		$content = getFileContent($filename, $directory);
+function scanUserFile($fileName, $folderName) {
+	if (isFileInDirectory($fileName, $folderName)) {
+		$content = getFileContent($fileName, $folderName);
 
 		if (! hasKeyword($content, 'Full Name:')) return false;
 
@@ -42,18 +43,18 @@ function scanUserFile($filename, $directory) {
 }
 
 /**
- * Check if a file exists in a directory
+ * Check if a file exists in a folder name that was provided by the user
  *
- * @param  string  $filename
- * @param  string  $directory
+ * @param  string  $fileName
+ * @param  string  $folderName
  * @return bool
  */
-function isFileInDirectory($filename, $directory)
+function isFileInDirectory($fileName, $folderName)
 {
-	if (is_dir($directory)) {
-		$contents = scandir($directory);
+	if (is_dir($folderName)) {
+		$contents = scandir($folderName);
 
-		return in_array($filename, $contents) ? true : false;
+		return in_array($fileName, $contents) ? true : false;
 	}
 
 	return false;
@@ -62,13 +63,13 @@ function isFileInDirectory($filename, $directory)
 /**
  * Get the content of the file
  *
- * @param  string  $filename
- * @param  string  $directory
+ * @param  string  $fileName
+ * @param  string  $folderName
  * @return string|null
  */
-function getFileContent($filename, $directory)
+function getFileContent($fileName, $folderName)
 {
-	$path = $directory . '/' . $filename;
+	$path = $folderName . '/' . $fileName;
 
 	if (file_exists($path) && is_readable($path)) {
 		return file_get_contents($path);
